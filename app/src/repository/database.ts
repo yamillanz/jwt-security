@@ -18,7 +18,7 @@ class database {
     async conectarBD() {
 
         this.cnn = await mysql.createPool({
-            connectionLimit: 1,
+            connectionLimit: 10,
             host: process.env.MYSQL_SERVER || "localhost", //"10.10.0.7",
             user: process.env.MYSQL_USER || "root",
             password: process.env.MYSQL_PW || "pass", //"4c3r04dm1n",
