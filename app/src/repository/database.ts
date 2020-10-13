@@ -21,8 +21,8 @@ class database {
             connectionLimit: 1,
             host: process.env.MYSQL_SERVER || "localhost", //"10.10.0.7",
             user: process.env.MYSQL_USER || "root",
-            password: process.env.MYSQL_PW || ".4C3r04dm1n", //"4c3r04dm1n",
-            database: process.env.MYSQL_DB || "bingolaisla"
+            password: process.env.MYSQL_PW || "pass", //"4c3r04dm1n",
+            database: process.env.MYSQL_DB || "bd"
         });
     }
 
@@ -31,23 +31,18 @@ class database {
     }
 
     private desconectarDB() {
-        //this.cnn.disposer;
         this.cnn.end(() => {
             //console.log("error:");            
         });
     }
 
     async querySelect(sql: string, data?: any) {
-
         let result: any = null;
         if (!data) {
             result = await this.cnn.query(sql);
         } else {
             result = await this.cnn.query(sql, data);
         }
-        //await this.cnn;
-        //this.cnn = null;
-        //this.desconectarDB();
         return result;
     }
 
@@ -86,12 +81,11 @@ class database {
 
     async findAll(param: ParamsData) {
         const { table, id, idvalue } = param;
-        //if (!idvalue && !id) { return { error: "Incomplete Parameters!!!" } }
         try {
             const result = await this.cnn.query(`SELECT * FROM ${table}`);
             return result;
         } catch (error) {
-            return error; 
+            return error;
         }
     }
 
@@ -102,7 +96,7 @@ class database {
             const result = await this.cnn.query(`SELECT * FROM ${table} WHERE ${id} = ? `, idvalue);
             return result;
         } catch (error) {
-            return error; 
+            return error;
         }
     }
 
