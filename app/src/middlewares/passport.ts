@@ -1,5 +1,5 @@
 import { Strategy, ExtractJwt } from "passport-jwt";
-import db from "../database";
+import db from "../repository/database";
 
 const strategy = new Strategy(
     {

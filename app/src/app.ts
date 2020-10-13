@@ -4,7 +4,7 @@ import cors from "cors";
 import passport from "passport"
 import passportMidd from "./middlewares/passport";
 import authRoutes from "./routes/index.route";
-import db from "./database";
+import db from "./repository/database";
 
 
 const app = express();
@@ -22,8 +22,22 @@ db.conectarBD();
 
 //test
 app.get("/", async (req, resp) => {
-    resp.send("Server http ON!");
-    //resp.status(201).json(result)
+    db.save({ table: "users", data: "" });
+    //resp.status(201).json(result), 
+
+});
+
+app.get("/api/test", async (req, resp) => {
+
+    try {
+        //const result = await db.update({ table: "users", data: req.body, id: "email" });
+        //const result = await db.remove({ table: "users", data: req.body, id: "email" });
+        //const result = await db.save({table:""});
+        const result = await db.findAll({table:"users"});
+        resp.status(201).json(result);
+    } catch (error) {
+        resp.status(401).json(error); 
+    }
 
 });
 
