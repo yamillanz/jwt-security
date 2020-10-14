@@ -25,7 +25,7 @@ export const getJWT = async (req: Request, resp: Response) => {
             return resp.status(402).json({ msg: "User dont exist" });
         }
 
-        const ismatch = await bcrypt.compare(usuario.pass, usuarioBD[0].pass);
+        const ismatch = await bcrypt.compare(usuario.pass, usuarioBD[0].pass || "");
         if (!ismatch) {
             return resp.status(402).json({ msg: "Worng data" });
         }
@@ -50,11 +50,10 @@ export const register = async (req: Request, resp: Response) => {
 
     try {
 
-        let consulta = "INSERT INTO users SET ?"
-        const result = await db.querySelect(consulta, [usuario]);
-        const user: User[] = await db.querySelect("SELECT * FROM users WHERE email = ?", [usuario.email]);
-        let { email } = user[0];
-        resp.status(200).json({ "msg": "User Creted!", email});
+        await db.save({ table: "users", data: usuario });
+        const user: User[] = await db.findOne({ table: "users", id: "email", idvalue: usuario.email });
+        delete user[0].pass;
+        resp.status(200).json({ "msg": "User Creted!", user:user[0]});
 
     } catch (error) {
         resp.status(401).json({ err: error });
