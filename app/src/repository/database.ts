@@ -15,14 +15,28 @@ class database {
 
     cnn: any;
 
+    constructor(host: string = "", user: string = "", pass: string = "", database: string = "") {
+        this.host = host; 
+        this.database = database; 
+        this.user = user; 
+        this.pass = pass; 
+    }
+
     async conectarBD() {
-        this.cnn = await mysql.createPool({
-            connectionLimit: 10,
-            host: process.env.MYSQL_SERVER || "localhost", //"10.10.0.7",
-            user: process.env.MYSQL_USER || "root",
-            password: process.env.MYSQL_PW || ".4C3r04dm1n",
-            database: process.env.MYSQL_DB || "bingolaisla"
+       this.cnn = await mysql.createPool({
+            connectionLimit: 2,
+            host: process.env.MYSQL_SERVER || this.host,
+            user: process.env.MYSQL_USER || this.user,
+            password: process.env.MYSQL_PW || this.pass,
+            database: process.env.MYSQL_DB || this.database
         });
+
+        try {
+            let testconection = await this.cnn.query(`use ${process.env.MYSQL_DB};`);
+            console.log(`Database ${this.database} conected!`);
+        } catch (error) {
+            console.log(`ERROR database conection!: ${error} `);
+        }
     }
 
     getC() {
